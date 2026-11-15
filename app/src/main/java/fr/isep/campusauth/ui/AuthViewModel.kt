@@ -85,7 +85,7 @@ class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
                     _uiState.update { it.copy(isLoading = false, info = message) }
                 },
                 onFailure = { e ->
-                    val message = (e as? AuthError ?: AuthError.Unknown).message
+                    val message = (e as? AuthError)?.message ?: e.message ?: AuthError.Unknown.message
                     _uiState.update { it.copy(isLoading = false, error = message) }
                 }
             )
