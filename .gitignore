@@ -1,0 +1,15 @@
+# gradle
+.gradle/
+build/
+/local.properties
+
+# android studio
+.idea/
+*.iml
+.DS_Store
+captures/
+.externalNativeBuild/
+.cxx/
+
+# firebase config added locally
+app/google-services.json
