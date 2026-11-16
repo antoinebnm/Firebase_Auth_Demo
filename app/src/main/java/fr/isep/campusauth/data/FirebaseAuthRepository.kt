@@ -14,9 +14,9 @@ import kotlin.coroutines.cancellation.CancellationException
 
 const val STUDENT_DOMAIN = "@eleve.isep.fr"
 
-class FirebaseAuthRepository(
-    private val auth: FirebaseAuth = Firebase.auth
-) : AuthRepository {
+class FirebaseAuthRepository : AuthRepository {
+
+    private val auth: FirebaseAuth by lazy { Firebase.auth } // created on first use
 
     override val authState: Flow<FirebaseUser?> = callbackFlow {
         val listener = FirebaseAuth.AuthStateListener { trySend(it.currentUser) } // fires on sign in and sign out

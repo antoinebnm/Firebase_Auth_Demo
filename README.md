@@ -1,13 +1,12 @@
 # CampusAuth_FirebaseDemo
 
 Live demo of Firebase Authentication (email/password) for ISEP students: sign-up restricted to `@eleve.isep.fr`, email verification, password reset, profile and account management.
-Kotlin, Jetpack Compose, Material 3, MVVM, Firebase Auth only.
 
 ## Setup
 
 1. Open the [Firebase console](https://console.firebase.google.com), create a project.
 2. **Authentication > Sign-in method**: enable **Email/Password**.
-3. *(optional)* **Authentication > Templates**: set the template language to French.
+3. *(optional)* **Authentication > Templates**: set the template language to any language (default in English).
 4. **Project settings > Add app > Android**, package name `fr.isep.campusauth`.
 5. Download `google-services.json` and put it in `app/` (it is git-ignored).
 
@@ -18,7 +17,7 @@ Kotlin, Jetpack Compose, Material 3, MVVM, Firebase Auth only.
 
 ## Demo scenario
 
-Use a real `@eleve.isep.fr` mailbox you can open during the talk (verification and reset emails may land in spam).
+Using a real `@eleve.isep.fr` mailbox:
 
 1. **Rejected sign-up**: create an account with `test@gmail.com` → "Seules les adresses @eleve.isep.fr sont acceptées" (checked locally, no Firebase call).
 2. **Accepted sign-up**: create an account with `prenom.nom@eleve.isep.fr` → user appears in the console (*Authentication > Users*), verification email sent.
