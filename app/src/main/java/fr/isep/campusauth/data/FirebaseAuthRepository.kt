@@ -9,6 +9,7 @@ import com.google.firebase.auth.userProfileChangeRequest
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.tasks.await
 import kotlin.coroutines.cancellation.CancellationException
 
@@ -18,54 +19,55 @@ class FirebaseAuthRepository : AuthRepository {
 
     private val auth: FirebaseAuth by lazy { Firebase.auth } // created on first use
 
-    override val authState: Flow<FirebaseUser?> = callbackFlow {
-        val listener = FirebaseAuth.AuthStateListener { trySend(it.currentUser) } // fires on sign in and sign out
-        auth.addAuthStateListener(listener)
-        awaitClose { auth.removeAuthStateListener(listener) } // remove when collection stops
+    // TODO step 1 emit the current user with callbackFlow + AuthStateListener and remove it in awaitClose
+    override val authState: Flow<FirebaseUser?> = flowOf(null)
+
+    override suspend fun signUp(email: String, password: String): Result<Unit> {
+        // TODO step 2 reject emails not ending with STUDENT_DOMAIN before calling firebase
+        // TODO step 2 create the user with createUserWithEmailAndPassword then sendEmailVerification
+        return notImplemented(2)
     }
 
-    override suspend fun signUp(email: String, password: String): Result<Unit> = safeCall {
-        if (!email.endsWith(STUDENT_DOMAIN, ignoreCase = true)) throw AuthError.NotStudentEmail // no firebase call
-        auth.createUserWithEmailAndPassword(email, password).await() // also signs the user in
-        currentUser().sendEmailVerification().await()
-    }
-
-    override suspend fun signIn(email: String, password: String): Result<Unit> = safeCall {
-        auth.signInWithEmailAndPassword(email, password).await()
+    override suspend fun signIn(email: String, password: String): Result<Unit> {
+        // TODO step 3 sign in with signInWithEmailAndPassword inside safeCall
+        return notImplemented(3)
     }
 
     override suspend fun sendVerificationEmail(): Result<Unit> = safeCall {
         currentUser().sendEmailVerification().await()
     }
 
-    override suspend fun reloadUser(): Result<Boolean> =
-        safeCall { currentUser().reload().await() } // fetch fresh user data from server
-            .map { auth.currentUser?.isEmailVerified == true }
-
-    override suspend fun sendPasswordReset(email: String): Result<Unit> = safeCall {
-        auth.sendPasswordResetEmail(email).await()
+    override suspend fun reloadUser(): Result<Boolean> {
+        // TODO step 4 reload the current user then return auth.currentUser?.isEmailVerified
+        return notImplemented(4)
     }
 
-    override suspend fun updateDisplayName(name: String): Result<Unit> = safeCall {
-        currentUser().updateProfile(userProfileChangeRequest { displayName = name }).await()
+    override suspend fun sendPasswordReset(email: String): Result<Unit> {
+        // TODO step 5 send a reset email with sendPasswordResetEmail
+        return notImplemented(5)
     }
 
-    override suspend fun changePassword(currentPassword: String, newPassword: String): Result<Unit> = safeCall {
-        reauthenticate(currentPassword) // sensitive action needs a recent login
-        currentUser().updatePassword(newPassword).await()
+    override suspend fun updateDisplayName(name: String): Result<Unit> {
+        // TODO step 5 update the profile with userProfileChangeRequest { displayName = name }
+        return notImplemented(5)
     }
 
-    override suspend fun deleteAccount(currentPassword: String): Result<Unit> = safeCall {
-        reauthenticate(currentPassword)
-        currentUser().delete().await() // auth state becomes null
+    override suspend fun changePassword(currentPassword: String, newPassword: String): Result<Unit> {
+        // TODO step 5 reauthenticate then updatePassword
+        return notImplemented(5)
     }
 
-    override fun signOut() = auth.signOut()
+    override suspend fun deleteAccount(currentPassword: String): Result<Unit> {
+        // TODO step 5 reauthenticate then delete the user
+        return notImplemented(5)
+    }
+
+    override fun signOut() {
+        // TODO step 5 sign out from firebase
+    }
 
     private suspend fun reauthenticate(password: String) {
-        val user = currentUser()
-        val credential = EmailAuthProvider.getCredential(user.email.orEmpty(), password)
-        user.reauthenticate(credential).await()
+        // TODO step 5 build a credential with EmailAuthProvider.getCredential(email, password) and reauthenticate
     }
 
     private fun currentUser(): FirebaseUser = auth.currentUser ?: throw AuthError.Unknown
@@ -79,4 +81,8 @@ class FirebaseAuthRepository : AuthRepository {
     } catch (e: Exception) {
         Result.failure(e.toAuthError())
     }
+
+    // placeholder shown in the ui until the step is done
+    private fun <T> notImplemented(step: Int): Result<T> =
+        Result.failure(NotImplementedError("Étape $step à implémenter"))
 }

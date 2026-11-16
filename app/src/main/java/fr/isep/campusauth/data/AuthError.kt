@@ -20,11 +20,6 @@ sealed class AuthError(override val message: String) : Exception(message) {
 // firebase exception to app error
 fun Throwable.toAuthError(): AuthError = when (this) {
     is AuthError -> this
-    is FirebaseAuthWeakPasswordException -> AuthError.WeakPassword // before invalid credentials (subclass)
-    is FirebaseAuthInvalidCredentialsException -> AuthError.InvalidCredentials
-    is FirebaseAuthInvalidUserException -> AuthError.InvalidCredentials
-    is FirebaseAuthUserCollisionException -> AuthError.EmailAlreadyUsed
-    is FirebaseAuthRecentLoginRequiredException -> AuthError.RecentLoginRequired
-    is FirebaseNetworkException -> AuthError.Network
+    // TODO step 3 map each FirebaseAuth exception to its AuthError (weak password first, it extends invalid credentials)
     else -> AuthError.Unknown
 }

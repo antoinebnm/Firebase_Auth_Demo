@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.android.application) // kotlin is built into agp 9
     alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.google.services) // reads app/google-services.json
+    // TODO step 0 apply the google services plugin (libs.plugins.google.services)
 }
 
 android {
