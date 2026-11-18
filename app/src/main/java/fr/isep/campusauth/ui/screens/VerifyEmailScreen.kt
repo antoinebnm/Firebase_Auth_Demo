@@ -6,6 +6,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import fr.isep.campusauth.R
 import fr.isep.campusauth.ui.AuthUiState
 import fr.isep.campusauth.ui.components.AuthScreen
 import fr.isep.campusauth.ui.components.LoadingButton
@@ -18,14 +20,14 @@ fun VerifyEmailScreen(
     onResend: () -> Unit,
     onSignOut: () -> Unit
 ) {
-    AuthScreen(title = "Vérifie ton email") {
-        Text("Un lien de vérification a été envoyé à ${state.user?.email}.")
-        Text("Clique sur le lien dans l'email puis reviens ici.")
-        LoadingButton(text = "J'ai vérifié", isLoading = state.isLoading, onClick = onReload)
+    AuthScreen(title = stringResource(R.string.verify_title)) {
+        Text(stringResource(R.string.verify_sent_to, state.user?.email.orEmpty()))
+        Text(stringResource(R.string.verify_instructions))
+        LoadingButton(text = stringResource(R.string.verify_done), isLoading = state.isLoading, onClick = onReload)
         OutlinedButton(onClick = onResend, enabled = !state.isLoading, modifier = Modifier.fillMaxWidth()) {
-            Text("Renvoyer l'email")
+            Text(stringResource(R.string.verify_resend))
         }
-        TextButton(onClick = onSignOut) { Text("Se déconnecter") }
+        TextButton(onClick = onSignOut) { Text(stringResource(R.string.sign_out)) }
         Messages(state.error, state.info)
     }
 }
