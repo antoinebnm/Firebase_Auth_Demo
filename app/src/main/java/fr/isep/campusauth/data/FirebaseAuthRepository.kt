@@ -83,6 +83,6 @@ class FirebaseAuthRepository : AuthRepository {
     }
 
     // placeholder shown in the ui until the step is done
-    private fun <T> notImplemented(step: Int): Result<T> =
-        Result.failure(NotImplementedError("Étape $step à implémenter"))
+    @Suppress("UNUSED_PARAMETER")
+    private fun <T> notImplemented(step: Int): Result<T> = Result.failure(AuthError.NotImplemented)
 }

@@ -17,6 +17,7 @@ sealed class AuthError(@StringRes val messageRes: Int) : Exception() {
     object RecentLoginRequired : AuthError(R.string.error_recent_login_required)
     object Network : AuthError(R.string.error_network)
     object Unknown : AuthError(R.string.error_unknown)
+    object NotImplemented : AuthError(R.string.error_not_implemented) // starter placeholder
 }
 
 // firebase exception to app error

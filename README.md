@@ -4,7 +4,7 @@ Exercise from the Firebase Authentication talk. The UI, navigation, ViewModel, s
 
 - Your code goes in `data/FirebaseAuthRepository.kt` and `data/AuthError.kt`, plus two Gradle lines for step 0
 - Every gap is marked `// TODO step N`: open **View > Tool Windows > TODO** in Android Studio to see them grouped
-- An unfinished step shows "Étape N à implémenter" under the form instead of crashing
+- An unfinished step shows "Not implemented yet: see the TODO steps" under the form instead of crashing
 - Stuck? Compare with the full version: `git diff starter solution -- app/src/main/java`
 
 The app compiles and runs right after cloning; it just stays on the sign-in screen.

@@ -47,4 +47,5 @@
     <string name="delete_dialog_text">Cette action est définitive.</string>
     <string name="delete">Supprimer</string>
     <string name="cancel">Annuler</string>
+    <string name="error_not_implemented">Pas encore implémenté : voir les TODO</string>
 </resources>
