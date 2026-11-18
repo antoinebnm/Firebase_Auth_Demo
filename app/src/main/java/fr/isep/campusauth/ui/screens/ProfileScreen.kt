@@ -17,6 +17,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import fr.isep.campusauth.R
 import fr.isep.campusauth.ui.AuthUiState
 import fr.isep.campusauth.ui.components.AuthScreen
 import fr.isep.campusauth.ui.components.LoadingButton
@@ -43,43 +45,43 @@ fun ProfileScreen(
         if (state.info != null) { currentPassword = ""; newPassword = "" }
     }
 
-    AuthScreen(title = "Mon profil") {
-        Text("Email : ${user.email}")
-        Text("UID : ${user.uid}", style = MaterialTheme.typography.bodySmall)
+    AuthScreen(title = stringResource(R.string.profile_title)) {
+        Text(stringResource(R.string.profile_email, user.email.orEmpty()))
+        Text(stringResource(R.string.profile_uid, user.uid), style = MaterialTheme.typography.bodySmall)
         Messages(state.error, state.info)
 
         HorizontalDivider()
-        Text("Nom affiché", style = MaterialTheme.typography.titleMedium)
+        Text(stringResource(R.string.display_name_section), style = MaterialTheme.typography.titleMedium)
         OutlinedTextField(
             value = displayName,
             onValueChange = { displayName = it },
-            label = { Text("Nom") },
+            label = { Text(stringResource(R.string.display_name_label)) },
             singleLine = true,
             modifier = Modifier.fillMaxWidth()
         )
         LoadingButton(
-            text = "Enregistrer",
+            text = stringResource(R.string.save),
             isLoading = state.isLoading && lastAction == "name",
             enabled = !state.isLoading && displayName.isNotBlank(),
             onClick = { lastAction = "name"; onUpdateName(displayName) }
         )
 
         HorizontalDivider()
-        Text("Changer le mot de passe", style = MaterialTheme.typography.titleMedium)
-        PasswordField(currentPassword, { currentPassword = it }, label = "Mot de passe actuel")
-        PasswordField(newPassword, { newPassword = it }, label = "Nouveau mot de passe")
+        Text(stringResource(R.string.change_password_section), style = MaterialTheme.typography.titleMedium)
+        PasswordField(currentPassword, { currentPassword = it }, label = stringResource(R.string.current_password))
+        PasswordField(newPassword, { newPassword = it }, label = stringResource(R.string.new_password))
         LoadingButton(
-            text = "Changer le mot de passe",
+            text = stringResource(R.string.change_password_section),
             isLoading = state.isLoading && lastAction == "password",
             enabled = !state.isLoading && currentPassword.isNotBlank() && newPassword.isNotBlank(),
             onClick = { lastAction = "password"; onChangePassword(currentPassword, newPassword) }
         )
 
         HorizontalDivider()
-        Text("Supprimer le compte", style = MaterialTheme.typography.titleMedium)
-        PasswordField(deletePassword, { deletePassword = it }, label = "Mot de passe actuel")
+        Text(stringResource(R.string.delete_account_section), style = MaterialTheme.typography.titleMedium)
+        PasswordField(deletePassword, { deletePassword = it }, label = stringResource(R.string.current_password))
         LoadingButton(
-            text = "Supprimer mon compte",
+            text = stringResource(R.string.delete_account_button),
             isLoading = state.isLoading && lastAction == "delete",
             enabled = !state.isLoading && deletePassword.isNotBlank(),
             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error),
@@ -88,24 +90,24 @@ fun ProfileScreen(
 
         HorizontalDivider()
         OutlinedButton(onClick = onSignOut, enabled = !state.isLoading, modifier = Modifier.fillMaxWidth()) {
-            Text("Se déconnecter")
+            Text(stringResource(R.string.sign_out))
         }
     }
 
     if (showDeleteDialog) {
         AlertDialog(
             onDismissRequest = { showDeleteDialog = false },
-            title = { Text("Supprimer le compte ?") },
-            text = { Text("Cette action est définitive.") },
+            title = { Text(stringResource(R.string.delete_dialog_title)) },
+            text = { Text(stringResource(R.string.delete_dialog_text)) },
             confirmButton = {
                 TextButton(onClick = {
                     showDeleteDialog = false
                     lastAction = "delete"
                     onDeleteAccount(deletePassword)
-                }) { Text("Supprimer", color = MaterialTheme.colorScheme.error) }
+                }) { Text(stringResource(R.string.delete), color = MaterialTheme.colorScheme.error) }
             },
             dismissButton = {
-                TextButton(onClick = { showDeleteDialog = false }) { Text("Annuler") }
+                TextButton(onClick = { showDeleteDialog = false }) { Text(stringResource(R.string.cancel)) }
             }
         )
     }

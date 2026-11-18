@@ -1,20 +1,22 @@
 package fr.isep.campusauth.data
 
+import androidx.annotation.StringRes
 import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseAuthRecentLoginRequiredException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException
+import fr.isep.campusauth.R
 
-sealed class AuthError(override val message: String) : Exception(message) {
-    object NotStudentEmail : AuthError("Seules les adresses @eleve.isep.fr sont acceptées")
-    object InvalidCredentials : AuthError("Email ou mot de passe incorrect")
-    object EmailAlreadyUsed : AuthError("Un compte existe déjà avec cet email")
-    object WeakPassword : AuthError("Mot de passe trop faible (6 caractères minimum)")
-    object RecentLoginRequired : AuthError("Reconnecte-toi puis réessaie")
-    object Network : AuthError("Pas de connexion internet")
-    object Unknown : AuthError("Une erreur est survenue")
+sealed class AuthError(@StringRes val messageRes: Int) : Exception() {
+    object NotStudentEmail : AuthError(R.string.error_not_student_email)
+    object InvalidCredentials : AuthError(R.string.error_invalid_credentials)
+    object EmailAlreadyUsed : AuthError(R.string.error_email_already_used)
+    object WeakPassword : AuthError(R.string.error_weak_password)
+    object RecentLoginRequired : AuthError(R.string.error_recent_login_required)
+    object Network : AuthError(R.string.error_network)
+    object Unknown : AuthError(R.string.error_unknown)
 }
 
 // firebase exception to app error

@@ -7,6 +7,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.res.stringResource
+import fr.isep.campusauth.R
 import fr.isep.campusauth.ui.AuthUiState
 import fr.isep.campusauth.ui.components.AuthScreen
 import fr.isep.campusauth.ui.components.EmailField
@@ -24,19 +26,19 @@ fun SignInScreen(
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
 
-    AuthScreen(title = "Connexion") {
+    AuthScreen(title = stringResource(R.string.sign_in_title)) {
         EmailField(email) { email = it }
         PasswordField(password, { password = it })
         LoadingButton(
-            text = "Se connecter",
+            text = stringResource(R.string.sign_in_button),
             isLoading = state.isLoading,
             enabled = email.isNotBlank() && password.isNotBlank(),
             onClick = { onSignIn(email, password) }
         )
         TextButton(onClick = { onForgotPassword(email) }, enabled = email.isNotBlank()) {
-            Text("Mot de passe oublié")
+            Text(stringResource(R.string.forgot_password))
         }
-        TextButton(onClick = onGoToSignUp) { Text("Pas de compte ? Créer un compte") }
+        TextButton(onClick = onGoToSignUp) { Text(stringResource(R.string.go_to_sign_up)) }
         Messages(state.error, state.info)
     }
 }

@@ -2,6 +2,7 @@ package fr.isep.campusauth.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import fr.isep.campusauth.R
 import fr.isep.campusauth.data.AuthError
 import fr.isep.campusauth.data.AuthRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,7 +26,7 @@ class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
 
     fun signUp(email: String, password: String) = launchAction(
         action = { repository.signUp(email.trim(), password) },
-        onSuccess = { "Compte créé, email de vérification envoyé" }
+        onSuccess = { R.string.info_account_created }
     )
 
     fun signIn(email: String, password: String) = launchAction(
@@ -34,35 +35,35 @@ class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
 
     fun sendPasswordReset(email: String) = launchAction(
         action = { repository.sendPasswordReset(email.trim()) },
-        onSuccess = { "Email de réinitialisation envoyé" }
+        onSuccess = { R.string.info_reset_sent }
     )
 
     fun resendVerificationEmail() = launchAction(
         action = { repository.sendVerificationEmail() },
-        onSuccess = { "Email de vérification renvoyé" }
+        onSuccess = { R.string.info_verification_resent }
     )
 
     fun reloadUser() = launchAction(
         action = { repository.reloadUser() },
         onSuccess = { verified ->
             _uiState.update { it.copy(isEmailVerified = verified) } // switches to profile if true
-            if (verified) "Email vérifié" else "Email pas encore vérifié"
+            if (verified) R.string.info_email_verified else R.string.info_email_not_verified
         }
     )
 
     fun updateDisplayName(name: String) = launchAction(
         action = { repository.updateDisplayName(name.trim()) },
-        onSuccess = { "Nom mis à jour" }
+        onSuccess = { R.string.info_name_updated }
     )
 
     fun changePassword(currentPassword: String, newPassword: String) = launchAction(
         action = { repository.changePassword(currentPassword, newPassword) },
-        onSuccess = { "Mot de passe modifié" }
+        onSuccess = { R.string.info_password_changed }
     )
 
     fun deleteAccount(currentPassword: String) = launchAction(
         action = { repository.deleteAccount(currentPassword) },
-        onSuccess = { "Compte supprimé" }
+        onSuccess = { R.string.info_account_deleted }
     )
 
     fun signOut() {
@@ -75,7 +76,7 @@ class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
     // loading on then result to error or info
     private fun <T> launchAction(
         action: suspend () -> Result<T>,
-        onSuccess: (T) -> String? = { null }
+        onSuccess: (T) -> Int? = { null } // info string resource
     ) {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, error = null, info = null) }
@@ -85,7 +86,7 @@ class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
                     _uiState.update { it.copy(isLoading = false, info = message) }
                 },
                 onFailure = { e ->
-                    val message = (e as? AuthError)?.message ?: e.message ?: AuthError.Unknown.message
+                    val message = (e as? AuthError ?: AuthError.Unknown).messageRes
                     _uiState.update { it.copy(isLoading = false, error = message) }
                 }
             )
